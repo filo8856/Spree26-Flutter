@@ -24,7 +24,6 @@ class _EventCardState extends State<EventCard> {
   Widget build(BuildContext context) {
     return Container(
         width: 280.w,
-        height: 269.h,
         decoration: BoxDecoration(
             color: Color(0xFF1E293B),
             borderRadius: BorderRadius.circular(16.r),
@@ -43,7 +42,7 @@ class _EventCardState extends State<EventCard> {
                     )
                 ),
                 Padding(
-                    padding: EdgeInsetsGeometry.all(12.w),
+                    padding: EdgeInsetsGeometry.only(top: 8.w, left: 12.w, bottom: 8.w),
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -56,7 +55,6 @@ class _EventCardState extends State<EventCard> {
                                     letterSpacing: 1,
                                 ),
                             ),
-                            SizedBox(height: 6.h,),
                             Text(
                                 widget.title,
                                 style: TextStyle(
@@ -80,8 +78,7 @@ class _EventCardState extends State<EventCard> {
                                 ],
                             )
                         ],
-                    ),
-                ),
+                    ),),
             ],
         ),
     );

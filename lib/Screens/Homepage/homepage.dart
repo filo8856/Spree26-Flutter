@@ -15,6 +15,7 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
+  final ScrollController _scrollController = ScrollController();
   static const _storage = FlutterSecureStorage();
   bool _isGuest = true;
 
@@ -100,37 +101,52 @@ class _HomepageState extends State<Homepage> {
       },
       child: Scaffold(
         backgroundColor: Colors.black,
+        extendBodyBehindAppBar: true,
         appBar: AppBar(
-          backgroundColor: Colors.black,
+          backgroundColor: Colors.black54,
+          elevation: 0,
+          scrolledUnderElevation: 0,
+          surfaceTintColor: Colors.transparent,
           leading: IconButton(
-            onPressed: () {
-              debugPrint('Menu Clicked');
-            },
+            onPressed: () => debugPrint('Menu Clicked'),
             icon: Icon(Icons.menu, color: Color(0xFFCBD5E1)),
           ),
           actions: [
             IconButton(
-              onPressed: () {
-                debugPrint('Notifications Clicked');
-              },
+              onPressed: () => debugPrint('Notifications Clicked'),
               icon: Icon(Icons.notifications_none, color: Color(0xFFCBD5E1)),
             ),
-            SizedBox(width: 8),
+            SizedBox(width: 8.w),
           ],
         ),
         body: Stack(
           children: [
-            Image.asset(
-              width: double.infinity,
-              'assets/homepage/homepage_bg.png',
-              fit: BoxFit.cover,
+            AnimatedBuilder(
+              animation: _scrollController,
+              builder: (context, child) {
+                double offset = 0;
+                if (_scrollController.hasClients) {
+                  offset = -_scrollController.offset * 0.045;
+                }
+                return Transform.translate(
+                  offset: Offset(0, offset),
+                  child: child,
+                );
+              },
+              child: Image.asset(
+                'assets/homepage/homepage_bg.png',
+                width: double.infinity,
+                fit: BoxFit.cover,
+                alignment: Alignment.topCenter,
+              ),
             ),
             SafeArea(
               child: SingleChildScrollView(
+                controller: _scrollController,
                 child: Center(
                   child: Column(
                     children: [
-                      //SPREE LOGO
+                      // SPREE LOGO
                       Stack(
                         alignment: Alignment.bottomRight,
                         children: [
@@ -139,7 +155,7 @@ class _HomepageState extends State<Homepage> {
                             fit: BoxFit.cover,
                           ),
                           Padding(
-                            padding: EdgeInsetsGeometry.only(top: 10),
+                            padding: EdgeInsets.only(top: 10),
                             child: Text(
                               'Unleash the Untamed',
                               style: TextStyle(
@@ -154,7 +170,7 @@ class _HomepageState extends State<Homepage> {
 
                       SizedBox(height: 24.h),
 
-                      //EVENTS TAB
+                      // EVENTS TAB
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 16.w),
                         child: Row(
@@ -169,9 +185,7 @@ class _HomepageState extends State<Homepage> {
                               ),
                             ),
                             GestureDetector(
-                              onTap: () {
-                                debugPrint('View All Clicked');
-                              },
+                              onTap: () => debugPrint('View All Clicked'),
                               child: Text(
                                 "View All",
                                 style: TextStyle(
@@ -185,11 +199,10 @@ class _HomepageState extends State<Homepage> {
                         ),
                       ),
                       SizedBox(height: 16.h),
-                      SizedBox(
-                        height: 228.h,
-                        child: ListView(
-                          scrollDirection: Axis.horizontal,
-                          padding: EdgeInsets.only(left: 16.w),
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        padding: EdgeInsets.only(left: 16.w),
+                        child: Row(
                           children: [
                             EventCard(
                               image: 'assets/events/battle_of_bands.png',
@@ -197,14 +210,14 @@ class _HomepageState extends State<Homepage> {
                               title: 'Battle of Bands',
                               date: 'Oct 24, 2026',
                             ),
-                            SizedBox(width: 16.h),
+                            SizedBox(width: 16.w),
                             EventCard(
                               image: 'assets/events/cricket.png',
                               category: 'SPORTS',
                               title: 'Cricket',
                               date: 'Oct 25, 2026',
                             ),
-                            SizedBox(width: 16.h),
+                            SizedBox(width: 16.w),
                             EventCard(
                               image: 'assets/events/fash_night.png',
                               category: 'ENTERTAINMENT',
@@ -217,17 +230,14 @@ class _HomepageState extends State<Homepage> {
 
                       SizedBox(height: 24.h),
 
-                      //GALLERY TAB
+                      // GALLERY TAB
                       Align(
-                        alignment: AlignmentGeometry.centerLeft,
+                        alignment: Alignment.centerLeft,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-
                           children: [
                             Padding(
-                              padding: EdgeInsetsGeometry.symmetric(
-                                horizontal: 16.w,
-                              ),
+                              padding: EdgeInsets.symmetric(horizontal: 16.w),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -240,7 +250,7 @@ class _HomepageState extends State<Homepage> {
                                     ),
                                   ),
                                   Text(
-                                    'Memories from Spree \'25',
+                                    "Memories from Spree '25",
                                     style: TextStyle(
                                       color: Color(0xFF64748B),
                                       fontSize: 14.sp,
@@ -256,32 +266,39 @@ class _HomepageState extends State<Homepage> {
                                 scrollDirection: Axis.horizontal,
                                 padding: EdgeInsets.only(left: 16.w),
                                 children: [
-                                  Image.asset(
-                                    'assets/gallery/Image+Border+Shadow.png',
-                                    fit: BoxFit.cover,
+                                  SizedBox(
+                                    child: Image.asset(
+                                      'assets/gallery/Image+Border+Shadow.png',
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                                   SizedBox(width: 12.w),
-                                  Image.asset(
-                                    'assets/gallery/Image+Border+Shadow-1.png',
-                                    fit: BoxFit.cover,
+                                  SizedBox(
+                                    child: Image.asset(
+                                      'assets/gallery/Image+Border+Shadow-1.png',
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                                   SizedBox(width: 12.w),
-
-                                  Image.asset(
-                                    'assets/gallery/Image+Border+Shadow-2.png',
-                                    fit: BoxFit.cover,
+                                  SizedBox(
+                                    child: Image.asset(
+                                      'assets/gallery/Image+Border+Shadow-2.png',
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                                   SizedBox(width: 12.w),
-
-                                  Image.asset(
-                                    'assets/gallery/Image+Border+Shadow-3.png',
-                                    fit: BoxFit.cover,
+                                  SizedBox(
+                                    child: Image.asset(
+                                      'assets/gallery/Image+Border+Shadow-3.png',
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                                   SizedBox(width: 12.w),
-
-                                  Image.asset(
-                                    'assets/gallery/Image+Border+Shadow-4.png',
-                                    fit: BoxFit.cover,
+                                  SizedBox(
+                                    child: Image.asset(
+                                      'assets/gallery/Image+Border+Shadow-4.png',
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -292,21 +309,22 @@ class _HomepageState extends State<Homepage> {
 
                       SizedBox(height: 24.h),
 
-                      //AFTERMOVIE
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(20.r),
-                        child: BackdropFilter(
-                          filter: ui.ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
-                          child: Padding(
-                            padding: EdgeInsetsGeometry.only(
-                              left: 16.w,
-                              right: 16.w,
-                            ),
-                            child: AspectRatio(
-                              aspectRatio: 16 / 9,
-                              child: SizedBox(
-                                width: double.infinity,
-
+                      SizedBox(
+                        width: double.infinity,
+                        child: Padding(
+                          padding: EdgeInsetsGeometry.only(
+                            left: 16.w,
+                            right: 16.w,
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(20.r),
+                            child: BackdropFilter(
+                              filter: ui.ImageFilter.blur(
+                                sigmaX: 5.0,
+                                sigmaY: 5.0,
+                              ),
+                              child: AspectRatio(
+                                aspectRatio: 16 / 9,
                                 child: youtubeUrl.isEmpty
                                     ? Center(
                                         child: CircularProgressIndicator(
@@ -315,7 +333,6 @@ class _HomepageState extends State<Homepage> {
                                       )
                                     : GestureDetector(
                                         onTap: () async {
-                                          // Open YouTube directly in external app - simple and reliable
                                           final uri = Uri.parse(youtubeUrl);
                                           if (!await launchUrl(
                                             uri,
@@ -335,45 +352,36 @@ class _HomepageState extends State<Homepage> {
                                             }
                                           }
                                         },
-                                        child: Container(
-                                          width: double.infinity,
-                                          height: double.infinity,
-                                          color: Colors.transparent,
-                                          child: Stack(
-                                            fit: StackFit.expand,
-                                            children: [
-                                              // YouTube thumbnail
-                                              Image.network(
-                                                'https://i.ytimg.com/vi/${_extractVideoId(youtubeUrl) ?? ''}/hqdefault.jpg',
-                                                fit: BoxFit.cover,
-                                                width: double.infinity,
-                                                height: double.infinity,
-                                              ),
-                                              // Play button overlay
-                                              Center(
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    Icon(
-                                                      Icons
-                                                          .play_circle_fill_rounded,
-                                                      color: Colors.orange,
-                                                      size: 64.w,
+                                        child: Stack(
+                                          fit: StackFit.expand,
+                                          children: [
+                                            Image.network(
+                                              'https://i.ytimg.com/vi/${_extractVideoId(youtubeUrl) ?? ''}/hqdefault.jpg',
+                                              fit: BoxFit.cover,
+                                            ),
+                                            Center(
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Icon(
+                                                    Icons
+                                                        .play_circle_fill_rounded,
+                                                    color: Colors.orange,
+                                                    size: 64.w,
+                                                  ),
+                                                  Text(
+                                                    "WATCH THE SPREE '25 AFTERMOVIE",
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                     ),
-                                                    Text(
-                                                      'WATCH THE SPREE \'25 AFTERMOVIE',
-                                                      style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
+                                                  ),
+                                                ],
                                               ),
-                                            ],
-                                          ),
+                                            ),
+                                          ],
                                         ),
                                       ),
                               ),
@@ -381,6 +389,8 @@ class _HomepageState extends State<Homepage> {
                           ),
                         ),
                       ),
+
+                      SizedBox(height: 24.h),
                     ],
                   ),
                 ),
@@ -390,5 +400,10 @@ class _HomepageState extends State<Homepage> {
         ),
       ),
     );
+  }
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 }

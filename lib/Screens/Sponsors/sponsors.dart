@@ -48,9 +48,9 @@ class Sponsors extends StatelessWidget {
             return const Center(child: Text('No sponsors found.', style: TextStyle(color: Colors.white)));
           }
 
-          final titleSponsors = docs.where((doc) => doc['tier'] == 'Title').toList();
-          final goldSponsors = docs.where((doc) => doc['tier'] == 'Gold').toList();
-          final supportingSponsors = docs.where((doc) => doc['tier'] == 'Supporting').toList();
+          final titleSponsors = docs.where((doc) => (doc.data() as Map<String, dynamic>)['tier'] == 'Title').toList();
+          final goldSponsors = docs.where((doc) => (doc.data() as Map<String, dynamic>)['tier'] == 'Gold').toList();
+          final supportingSponsors = docs.where((doc) => (doc.data() as Map<String, dynamic>)['tier'] == 'Supporting').toList();
 
           return SingleChildScrollView(
             child: Container(

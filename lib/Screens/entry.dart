@@ -1,0 +1,236 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+// import 'package:spree/Screens/Events/Events.dart';
+import 'package:spree/Screens/Homepage/homepage.dart';
+import 'package:spree/Screens/Login.dart';
+import 'package:spree/Payments/payments_home.dart';
+// import 'package:spree/Screens/gate_pass_screen.dart';
+import 'package:spree/Services/config.dart';
+
+class Entry extends StatefulWidget {
+  final Future<void> Function()? onLogout;
+
+  const Entry({super.key, this.onLogout});
+
+  @override
+  State<Entry> createState() => _EntryState();
+}
+
+class _EntryState extends State<Entry> {
+  static const _storage = FlutterSecureStorage();
+  int _currentIndex = 0;
+  bool _isGuest = true;
+  bool _isLoggingOut = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserType();
+  }
+
+  Future<void> _loadUserType() async {
+    final userType = await _storage.read(key: 'user_type');
+    if (mounted) {
+      setState(() => _isGuest = userType == 'guest');
+    }
+  }
+
+  Future<void> _handleLogoutTap() async {
+    if (widget.onLogout == null) return;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: const Color(0xFF171717),
+        title: Text(
+          'Logout',
+          style: TextStyle(color: Colors.white, fontSize: 20.sp),
+        ),
+        content: Text(
+          'Are you sure you want to logout?',
+          style: TextStyle(color: Colors.white70, fontSize: 14.sp),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: Text('Cancel', style: TextStyle(color: Colors.grey)),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: Text('Logout', style: TextStyle(color: Color(0xFFFF3355))),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !mounted) return;
+    setState(() => _isLoggingOut = true);
+    try {
+      await widget.onLogout!.call();
+      if (!mounted) return;
+      // Explicitly navigate to Login so iOS reliably shows login screen
+      final nav = Navigator.of(context, rootNavigator: true);
+      nav.pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (_) => LoginScreen(onLogoutForEntry: widget.onLogout),
+        ),
+        (route) => false,
+      );
+    } finally {
+      if (mounted) setState(() => _isLoggingOut = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isGuest = _isGuest;
+    final showEvents = Config().showEvents;
+
+    final pages = <Widget>[
+      const Homepage(),
+      // if (showEvents) Events(),
+      if (!isGuest) PaymentsHome(),
+      // GatePassScreen(),
+    ];
+
+    final pageCount = pages.length;
+    final safeIndex = _currentIndex.clamp(0, pageCount - 1);
+    if (safeIndex != _currentIndex && mounted) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) setState(() => _currentIndex = safeIndex);
+      });
+    }
+
+    return Scaffold(
+      backgroundColor: const Color(0xFF171717),
+      body: pages[safeIndex],
+      bottomNavigationBar: SafeArea(
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: 10.h),
+          decoration: const BoxDecoration(
+            color: Color(0xFF171717),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              GestureDetector(
+                onTap: () => setState(() => _currentIndex = 0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.home_outlined,
+                      size: 24.r,
+                      color: _currentIndex == 0 ? Colors.white : Colors.grey,
+                    ),
+                    SizedBox(height: 4.h),
+                    Text(
+                      'Home',
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        color: _currentIndex == 0 ? Colors.white : Colors.grey,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              if (showEvents)
+                GestureDetector(
+                  onTap: () => setState(() => _currentIndex = 1),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.calendar_month,
+                        size: 24.r,
+                        color: _currentIndex == 1 ? Colors.white : Colors.grey,
+                      ),
+                      SizedBox(height: 4.h),
+                      Text(
+                        'Events',
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          color: _currentIndex == 1 ? Colors.white : Colors.grey,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              if (!isGuest)
+                GestureDetector(
+                  onTap: () => setState(() => _currentIndex = showEvents ? 2 : 1),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.qr_code_2,
+                        size: 24.r,
+                        color: (showEvents ? _currentIndex == 2 : _currentIndex == 1)
+                            ? Colors.white
+                            : Colors.grey,
+                      ),
+                      SizedBox(height: 4.h),
+                      Text(
+                        'Payments',
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          color: (showEvents ? _currentIndex == 2 : _currentIndex == 1)
+                              ? Colors.white
+                              : Colors.grey,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              GestureDetector(
+                onTap: () => setState(() => _currentIndex = pageCount - 1),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.fingerprint,
+                      size: 24.r,
+                      color: _currentIndex == pageCount - 1
+                          ? Colors.white
+                          : Colors.grey,
+                    ),
+                    SizedBox(height: 4.h),
+                    Text(
+                      'Pass',
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        color: _currentIndex == pageCount - 1
+                            ? Colors.white
+                            : Colors.grey,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              GestureDetector(
+                onTap: _isLoggingOut ? null : _handleLogoutTap,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.logout_rounded,
+                      size: 24.r,
+                      color: _isLoggingOut ? Colors.grey : Colors.white70,
+                    ),
+                    SizedBox(height: 4.h),
+                    Text(
+                      'Logout',
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        color: _isLoggingOut ? Colors.grey : Colors.white70,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

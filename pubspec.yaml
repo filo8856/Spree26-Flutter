@@ -40,6 +40,15 @@ dependencies:
   no_screenshot: ^0.3.1
   url_launcher: ^6.2.5
   flutter_secure_storage: ^10.0.0
+  google_sign_in: ^6.2.1
+  sign_in_with_apple: ^7.0.1
+  flutter_svg: ^2.2.3
+  flutter_launcher_icons: ^0.14.4
+  permission_handler: ^11.3.1
+  device_info_plus: ^12.1.0
+  android_id: ^0.4.0
+
+
 
 dev_dependencies:
   flutter_test:
@@ -72,6 +81,7 @@ flutter:
     - assets/homepage/
     - assets/events/
     - assets/gallery/
+    - assets/Login/
 
   fonts:
     - family: QwitcherGrypen
@@ -81,6 +91,10 @@ flutter:
     - family: Inter
       fonts:
         - asset: assets/fonts/Inter.ttf
+
+    - family: Akira Expanded
+      fonts:
+        - asset: assets/fonts/AkiraExpanded.otf 
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package

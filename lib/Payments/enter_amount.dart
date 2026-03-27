@@ -166,7 +166,7 @@ class _EnterAmountState extends State<EnterAmount> {
         SizedBox(height: 16.h),
         _buildKeyPadRow(['7', '8', '9']),
         SizedBox(height: 16.h),
-        _buildKeyPadRow(['.', '0', '<']),
+        _buildKeyPadRow(['', '0', '<']),
       ],
     );
   }

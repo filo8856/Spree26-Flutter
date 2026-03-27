@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:spree/Payments/enter_amount.dart';
 import 'package:spree/Payments/payment_failed.dart';
 import 'package:spree/Payments/payment_success.dart';
 import 'package:spree/Payments/payments_home.dart';
@@ -46,7 +47,7 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             colorScheme: .fromSeed(seedColor: Colors.deepPurple),
           ),
-          home: ContactUs(),
+          home: EnterAmount(vendor: 'DOMI',qrdata: 'xxx',),
         );
       },
     );

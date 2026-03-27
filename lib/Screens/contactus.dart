@@ -44,7 +44,7 @@ class _ContactUsState extends State<ContactUs> {
             style: TextStyle(
               color: Colors.white,
               fontSize: 40.h,
-              fontFamily: 'Inter',
+              fontFamily: 'Orbitron_Bold',
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -110,7 +110,7 @@ class _ContactUsState extends State<ContactUs> {
                             child: Container(
                               constraints: BoxConstraints(minHeight: 100.h),
                               decoration: BoxDecoration(
-                                color: const Color.fromARGB(255, 92, 92, 92),
+                                color: const Color.fromARGB(255, 90, 89, 89),
                                 borderRadius: BorderRadius.only(
                                   topLeft: Radius.circular(20.r),
                                   topRight: Radius.circular(20.r),

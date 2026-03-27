@@ -13,6 +13,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 //import 'package:no_screenshot/no_screenshot.dart';
 import 'package:spree/Screens/login.dart';
+import 'package:spree/Payments/set_pin.dart';
+import 'package:spree/Payments/reset_pin.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -47,7 +50,7 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             colorScheme: .fromSeed(seedColor: Colors.deepPurple),
           ),
-          home: ContactUs(),
+          home: SetPin(),
         );
       },
     );
